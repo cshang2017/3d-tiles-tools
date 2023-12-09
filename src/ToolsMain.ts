@@ -219,13 +219,15 @@ export class ToolsMain {
 
     ToolsMain.ensureCanWrite(output, force);
     const inputBuffer = fs.readFileSync(input);
-    const outputTileData =
-      TileFormats.createDefaultB3dmTileDataFromGlb(inputBuffer);
+
+    const outputTileData = TileFormats.createDefaultB3dmTileDataFromGlb(inputBuffer);
     const outputBuffer = TileFormats.createTileDataBuffer(outputTileData);
+    
     fs.writeFileSync(output, outputBuffer);
 
     logger.debug(`Executing glbToB3dm DONE`);
   }
+
   static async glbToI3dm(input: string, output: string, force: boolean) {
     logger.debug(`Executing glbToI3dm`);
     logger.debug(`  input: ${input}`);
@@ -241,6 +243,7 @@ export class ToolsMain {
 
     logger.debug(`Executing glbToI3dm DONE`);
   }
+
   static async optimizeB3dm(
     input: string,
     output: string,
@@ -263,6 +266,7 @@ export class ToolsMain {
 
     logger.debug(`Executing optimizeB3dm DONE`);
   }
+
   static async optimizeI3dm(
     input: string,
     output: string,
@@ -304,6 +308,7 @@ export class ToolsMain {
     );
     logger.info(`Analyzing ${inputFileName} DONE`);
   }
+
   static analyzeInternal(
     inputBaseName: string,
     inputBuffer: Buffer,

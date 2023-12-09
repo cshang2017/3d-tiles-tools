@@ -369,6 +369,7 @@ export class TileFormats {
     batchTableJson: BatchTable | undefined,
     batchTableBinary: Buffer | undefined
   ): TileData {
+
     const defaultFeatureTableJson = {
       BATCH_LENGTH: 0,
     };
@@ -378,20 +379,24 @@ export class TileFormats {
       version: 1,
       gltfFormat: undefined,
     };
+
     const featureTable = {
       json: featureTableJson ?? defaultFeatureTableJson,
       binary: featureTableBinary ?? Buffer.alloc(0),
     };
+
     const batchTable = {
       json: batchTableJson ?? {},
       binary: batchTableBinary ?? Buffer.alloc(0),
     };
+
     const tileData = {
       header: header,
       featureTable: featureTable,
       batchTable: batchTable,
       payload: glbData,
     };
+
     return tileData;
   }
 
@@ -507,6 +512,7 @@ export class TileFormats {
    * @returns The buffer
    */
   static createTileDataBuffer(tileData: TileData): Buffer {
+
     const header = tileData.header;
     const featureTable = tileData.featureTable;
     const batchTable = tileData.batchTable;
@@ -515,13 +521,16 @@ export class TileFormats {
     if (header.magic === "i3dm") {
       headerByteLength = 32;
     }
+
     const featureTableJsonBuffer = Buffers.getJsonBufferPadded(
       featureTable.json,
       headerByteLength
     );
+
     const featureTableBinaryBuffer = Buffers.getBufferPadded(
       featureTable.binary
     );
+
     const batchTableJsonBuffer = Buffers.getJsonBufferPadded(batchTable.json);
     const batchTableBinaryBuffer = Buffers.getBufferPadded(batchTable.binary);
     const payload = Buffers.getBufferPadded(tileData.payload);
@@ -533,6 +542,7 @@ export class TileFormats {
       batchTableJsonBuffer.length +
       batchTableBinaryBuffer.length +
       payload.length;
+
     const headerBuffer = Buffer.alloc(headerByteLength);
     headerBuffer.write(header.magic, 0);
     headerBuffer.writeUInt32LE(tileData.header.version, 4);
@@ -541,10 +551,12 @@ export class TileFormats {
     headerBuffer.writeUInt32LE(featureTableBinaryBuffer.length, 16);
     headerBuffer.writeUInt32LE(batchTableJsonBuffer.length, 20);
     headerBuffer.writeUInt32LE(batchTableBinaryBuffer.length, 24);
+
     if (header.magic === "i3dm") {
       const gltfFormat = header.gltfFormat ?? 0;
       headerBuffer.writeUInt32LE(gltfFormat, 28);
     }
+    
     return Buffer.concat([
       headerBuffer,
       featureTableJsonBuffer,
